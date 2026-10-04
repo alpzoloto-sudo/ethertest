@@ -34,7 +34,7 @@ jobs:
         run: |
           mkdir -p build
           arduino-cli compile \
-            --fqbn esp32:esp32:esp32s3:USBMode=default,FlashSize=8M,PartitionScheme=default_8MB \
+            --fqbn esp32:esp32:esp32s3:USBMode=default,DebugLevel=verbose,FlashSize=8M,PartitionScheme=default_8MB \
             --output-dir build \
             firmware/EtherTest
 
