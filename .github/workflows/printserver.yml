@@ -24,7 +24,7 @@ jobs:
       - name: Compile Super Mini 4MB QSPI PSRAM
         run: |
           mkdir -p build
-          arduino-cli compile --fqbn 'esp32:esp32:esp32s3:USBMode=default,CDCOnBoot=disabled,FlashSize=4M,PartitionScheme=huge_app,PSRAM=qspi' --output-dir build firmware/PrintServer
+          arduino-cli compile --fqbn 'esp32:esp32:esp32s3:USBMode=default,FlashSize=4M,PartitionScheme=huge_app,PSRAM=qspi' --output-dir build firmware/PrintServer
       - uses: actions/upload-artifact@v4
         with:
           name: PrintServer-SuperMini-EXPERIMENTAL
