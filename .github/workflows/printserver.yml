@@ -1,0 +1,35 @@
+name: Build PrintServer Super Mini
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+      - name: Install ESP32 core 3.3.10
+        run: |
+          arduino-cli config init
+          arduino-cli config add board_manager.additional_urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32@3.3.10
+      - name: Install dependencies
+        run: |
+          arduino-cli lib update-index
+          arduino-cli lib install "Adafruit NeoPixel"
+          git clone --depth 1 https://github.com/tanakamasayuki/EspUsbHost.git "$HOME/Arduino/libraries/EspUsbHost"
+      - name: Compile Super Mini 4MB QSPI PSRAM
+        run: |
+          mkdir -p build
+          arduino-cli compile --fqbn 'esp32:esp32:esp32s3:USBMode=default,CDCOnBoot=disabled,FlashSize=4M,PartitionScheme=huge_app,PSRAM=qspi' --output-dir build firmware/PrintServer
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PrintServer-SuperMini-EXPERIMENTAL
+          path: |
+            build/*.bin
+            build/*.elf
+            build/*.map
+          if-no-files-found: error
